@@ -1,12 +1,12 @@
 import { ThemeProvider } from '@/components/theme-provider'
-import './App.css'
-import MainLayout from '@/layouts/MainLayout/MainLayout'
+import useRouteElements from '@/useRouteElements'
 
 function App() {
+  const routeElements = useRouteElements()
   return (
     <>
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-        <MainLayout />
+        {routeElements}
       </ThemeProvider>
     </>
   )

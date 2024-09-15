@@ -2,15 +2,11 @@ import { Link } from 'react-router-dom'
 
 const menuItems = [
   {
-    title: 'Danh sách',
+    title: 'Order',
     href: '/'
   },
   {
-    title: 'Đơn hàng',
-    href: '/'
-  },
-  {
-    title: 'Đăng nhập',
+    title: 'Login',
     href: '/'
   }
 ]

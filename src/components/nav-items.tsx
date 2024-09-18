@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 
 const menuItems = [
   {
-    title: 'Order',
-    href: '/'
+    title: 'Contact',
+    href: '/contact'
   },
   {
     title: 'Login',

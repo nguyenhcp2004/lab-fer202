@@ -20,7 +20,7 @@ export default function TeamMemberCard({
   return (
     <Card className='overflow-hidden'>
       <CardHeader className='p-0'>
-        <div className='h-48 overflow-hidden'>
+        <div className='h-52 overflow-hidden'>
           <img
             src={imageUrl}
             alt={name}
@@ -29,13 +29,11 @@ export default function TeamMemberCard({
         </div>
       </CardHeader>
       <CardContent className='p-6'>
-        <CardTitle className='text-xl font-semibold text-pink-700'>
-          {name}
-        </CardTitle>
-        <CardDescription className='text-gray-600 font-medium'>
+        <CardTitle className='text-xl font-semibold'>{name}</CardTitle>
+        <CardDescription className='text-gray-400 font-medium'>
           {role}
         </CardDescription>
-        <p className='mt-2 text-gray-700'>{bio}</p>
+        <p className='mt-2 text-gray-400'>{bio}</p>
       </CardContent>
     </Card>
   )

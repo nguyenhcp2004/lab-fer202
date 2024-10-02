@@ -12,7 +12,7 @@ export default function Header() {
           className='flex items-center gap-2 text-lg font-semibold md:text-base'
         >
           <Package2 className='h-6 w-6' />
-          <span className='sr-only'>Orchid Shop</span>
+          <span className='sr-only'>Orchid Haven</span>
         </Link>
         <NavItems className='text-muted-foreground transition-colors hover:text-foreground flex-shrink-0' />
       </nav>

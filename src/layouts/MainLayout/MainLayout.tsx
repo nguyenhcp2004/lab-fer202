@@ -1,3 +1,4 @@
+import Footer from '@/components/footer'
 import Header from '@/components/Header'
 
 interface Props {
@@ -10,6 +11,7 @@ export default function MainLayout({ children }: Props) {
       <main className='flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 items-center'>
         {children}
       </main>
+      <Footer />
     </div>
   )
 }

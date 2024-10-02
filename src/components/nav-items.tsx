@@ -6,8 +6,8 @@ const menuItems = [
     href: '/contact'
   },
   {
-    title: 'Login',
-    href: '/'
+    title: 'About',
+    href: '/about'
   }
 ]
 

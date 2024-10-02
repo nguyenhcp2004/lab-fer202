@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { listOrchids } from '@/shared/ListOfOrchids'
 import {
   DropletIcon,
   HeartIcon,
@@ -17,15 +18,18 @@ import {
   SunIcon,
   ThermometerIcon
 } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 
 export default function OrchidDetail() {
+  const params = useParams()
+  const orchid = listOrchids.filter((orchid) => orchid.Id === params.id)[0]
   return (
     <div>
       <div className='grid md:grid-cols-2 gap-8'>
         <div className='space-y-4'>
           <div className='relative aspect-square overflow-hidden rounded-lg'>
             <img
-              src='https://i.pinimg.com/736x/0b/eb/c9/0bebc959f13e46ee0698d32877572b66.jpg'
+              src={orchid.image}
               alt='Phalaenopsis Orchid'
               className='object-cover w-full h-full'
             />
@@ -37,7 +41,7 @@ export default function OrchidDetail() {
                 className='relative aspect-square overflow-hidden rounded-md'
               >
                 <img
-                  src='https://i.pinimg.com/736x/0b/eb/c9/0bebc959f13e46ee0698d32877572b66.jpg'
+                  src={orchid.image}
                   alt={`Phalaenopsis Orchid view ${i}`}
                   className='object-cover w-full h-full'
                 />
@@ -47,17 +51,10 @@ export default function OrchidDetail() {
         </div>
         <div className='space-y-6'>
           <div>
-            <h1 className='text-3xl font-bold'>
-              Phalaenopsis Orchid - Pink Blush
-            </h1>
-            <p className='text-xl font-semibold mt-2'>$49.99</p>
+            <h1 className='text-3xl font-bold'>{orchid.name}</h1>
+            <p className='text-xl font-semibold mt-2'>${orchid.price}</p>
           </div>
-          <p className='text-gray-400'>
-            The Phalaenopsis Orchid, also known as the Moth Orchid, is a
-            stunning and elegant flower perfect for both beginners and
-            experienced growers. Its pink blush petals create a soft, romantic
-            atmosphere in any space.
-          </p>
+          <p className='text-gray-400'>{orchid.description}</p>
           <div className='flex items-center space-x-4'>
             <Label htmlFor='quantity' className='font-medium'>
               Quantity:
@@ -89,13 +86,13 @@ export default function OrchidDetail() {
             </CardHeader>
             <CardContent className='space-y-4'>
               <p>
-                <strong>Scientific Name:</strong> Phalaenopsis amabilis
+                <strong>Scientific Name:</strong> {orchid.name}
               </p>
               <p>
-                <strong>Color:</strong> Pink with white accents
+                <strong>Color:</strong> {orchid.color}
               </p>
               <p>
-                <strong>Origin:</strong> Native to Southeast Asia and Australia
+                <strong>Origin:</strong> {orchid.origin}
               </p>
             </CardContent>
           </Card>

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Star } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function OrchidList() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,65 +39,69 @@ export default function OrchidList() {
         </h2>
         <div className='grid grid-cols-1 sm:grid-cols-3 gap-10'>
           {orchids.map((orchid) => (
-            <div className='flex gap-4 w' key={orchid.Id}>
-              <div className='flex-shrink-0'>
-                <img
-                  src={orchid.image}
-                  className='object-cover w-[150px] h-[150px] rounded-md'
-                />
-              </div>
-              <div className='space-y-1'>
-                <h3 className='text-xl font-semibold'>{orchid.name}</h3>
-                <p className=''>
-                  <b>Category: </b>
-                  {orchid.category}
-                </p>
-                <p>
-                  <b>Origin: </b>
-                  {orchid.origin}
-                </p>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant='outline'>Detail</Button>
-                  </DialogTrigger>
-                  <DialogContent className='sm:max-w-[425px]'>
-                    <DialogHeader>
-                      <DialogTitle>{orchid.name}</DialogTitle>
-                      <DialogDescription>Detail of orchid</DialogDescription>
-                    </DialogHeader>
-                    <div className='grid grid-cols-2 gap-2 py-4'>
-                      <div className='grid grid-cols-1'>
-                        <img
-                          src={orchid.image}
-                          className='object-cover w-[150px] h-[150px] rounded-md'
-                        />
-                      </div>
-                      <div className='grid grid-cols-1'>
-                        <div>
-                          <p className='p-1'>
-                            <b>Origin: </b>
-                            {orchid.origin}
-                          </p>
-                          <p className='p-1'>
-                            <b>Category: </b>
-                            {orchid.category}
-                          </p>
-                          <p className='p-1'>
-                            <b>Color: </b>
-                            {orchid.color}
-                          </p>
-                          <p className='flex p-1'>
-                            <b className='mr-2'>Rating: </b>
-                            {orchid.rating}
-                            <Star className='ml-1 bg-transparent fill-yellow-200 ' />
-                          </p>
-                        </div>
-                      </div>
+            <Dialog key={orchid.Id}>
+              <DialogTrigger asChild>
+                <div className='flex gap-4 w' key={orchid.Id}>
+                  <div className='flex-shrink-0'>
+                    <img
+                      src={orchid.image}
+                      className='object-cover w-[150px] h-[150px] rounded-md'
+                    />
+                  </div>
+                  <div className='space-y-1 text-left'>
+                    <h3 className='text-xl font-semibold'>{orchid.name}</h3>
+                    <p className=''>
+                      <b>Category: </b>
+                      {orchid.category}
+                    </p>
+                    <p>
+                      <b>Origin: </b>
+                      {orchid.origin}
+                    </p>
+                    <p className='pt-2'>
+                      <Link to={`/orchid/${orchid.Id}`}>
+                        <Button variant='outline'>Detail</Button>
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+              </DialogTrigger>
+              <DialogContent className='sm:max-w-[425px]'>
+                <DialogHeader>
+                  <DialogTitle>{orchid.name}</DialogTitle>
+                  <DialogDescription>Detail of orchid</DialogDescription>
+                </DialogHeader>
+                <div className='grid grid-cols-2 gap-2 py-4'>
+                  <div className='grid grid-cols-1'>
+                    <img
+                      src={orchid.image}
+                      className='object-cover w-[150px] h-[150px] rounded-md'
+                    />
+                  </div>
+                  <div className='grid grid-cols-1'>
+                    <div>
+                      <p className='p-1'>
+                        <b>Origin: </b>
+                        {orchid.origin}
+                      </p>
+                      <p className='p-1'>
+                        <b>Category: </b>
+                        {orchid.category}
+                      </p>
+                      <p className='p-1'>
+                        <b>Color: </b>
+                        {orchid.color}
+                      </p>
+                      <p className='flex p-1'>
+                        <b className='mr-2'>Rating: </b>
+                        {orchid.rating}
+                        <Star className='ml-1 bg-transparent fill-yellow-200 ' />
+                      </p>
                     </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           ))}
         </div>
       </section>

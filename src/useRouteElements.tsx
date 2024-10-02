@@ -1,6 +1,7 @@
 import MainLayout from '@/layouts/MainLayout'
 import About from '@/pages/About'
 import Contact from '@/pages/Contact'
+import Natural from '@/pages/Natural'
 import OrchidDetail from '@/pages/OrchidDetail'
 import OrchidList from '@/pages/OrchidList'
 import { useRoutes } from 'react-router-dom'
@@ -33,10 +34,18 @@ export default function useRouteElements() {
       )
     },
     {
-      path: '/detail',
+      path: '/orchid/:id',
       element: (
         <MainLayout>
           <OrchidDetail />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/natural',
+      element: (
+        <MainLayout>
+          <Natural />
         </MainLayout>
       )
     }

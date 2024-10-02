@@ -8,6 +8,10 @@ const menuItems = [
   {
     title: 'About',
     href: '/about'
+  },
+  {
+    title: 'Natural',
+    href: '/natural'
   }
 ]
 

@@ -21,7 +21,7 @@ export default function OrchidList() {
         <img
           src='/banner.jpg'
           alt='Banner'
-          className='absolute top-0 left-0 w-full h-full object-cover'
+          className='absolute top-0 left-0 w-full h-full object-cover z-5'
         />
         <div className='z-20 relative py-10 md:py-20 px-4 sm:px-10 md:px-20'>
           <h1 className='text-center text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold'>
@@ -73,19 +73,19 @@ export default function OrchidList() {
                       </div>
                       <div className='grid grid-cols-1'>
                         <div>
-                          <p>
+                          <p className='p-1'>
                             <b>Origin: </b>
                             {orchid.origin}
                           </p>
-                          <p>
+                          <p className='p-1'>
                             <b>Category: </b>
                             {orchid.category}
                           </p>
-                          <p>
+                          <p className='p-1'>
                             <b>Color: </b>
                             {orchid.color}
                           </p>
-                          <p className='flex'>
+                          <p className='flex p-1'>
                             <b className='mr-2'>Rating: </b>
                             {orchid.rating}
                             <Star className='ml-1 bg-transparent fill-yellow-200 ' />

@@ -25,16 +25,16 @@ export default function OrchidDetail() {
   const orchid = listOrchids.filter((orchid) => orchid.Id === params.id)[0]
   return (
     <div>
-      <div className='grid md:grid-cols-2 gap-8'>
+      <div className='grid md:grid-cols-2 gap-8 '>
         <div className='space-y-4'>
-          <div className='relative aspect-square overflow-hidden rounded-lg'>
+          <div className='relative w-[600px] h-[600px] overflow-hidden rounded-lg'>
             <img
               src={orchid.image}
               alt='Phalaenopsis Orchid'
               className='object-cover w-full h-full'
             />
           </div>
-          <div className='grid grid-cols-4 gap-4'>
+          <div className='w-[600px] grid grid-cols-4 gap-4'>
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}

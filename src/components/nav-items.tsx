@@ -12,6 +12,10 @@ const menuItems = [
   {
     title: 'Natural',
     href: '/natural'
+  },
+  {
+    title: 'Login',
+    href: '/login'
   }
 ]
 

@@ -18,11 +18,20 @@ import {
   SunIcon,
   ThermometerIcon
 } from 'lucide-react'
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
 export default function OrchidDetail() {
   const params = useParams()
   const orchid = listOrchids.filter((orchid) => orchid.Id === params.id)[0]
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }, [])
+
   return (
     <div>
       <div className='grid md:grid-cols-2 gap-8 '>

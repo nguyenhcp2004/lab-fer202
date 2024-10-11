@@ -1,6 +1,7 @@
 import MainLayout from '@/layouts/MainLayout'
 import About from '@/pages/About'
 import Contact from '@/pages/Contact'
+import Login from '@/pages/Login'
 import Natural from '@/pages/Natural'
 import OrchidDetail from '@/pages/OrchidDetail'
 import OrchidList from '@/pages/OrchidList'
@@ -22,6 +23,14 @@ export default function useRouteElements() {
       element: (
         <MainLayout>
           <Contact />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/login',
+      element: (
+        <MainLayout>
+          <Login />
         </MainLayout>
       )
     },

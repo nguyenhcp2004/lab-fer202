@@ -1,14 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
+import { getProfileFromLS } from '@/lib/auth'
+import { User } from '@/schemaValidations/user.schema'
 import { createContext, SetStateAction, useContext, useState } from 'react'
 
 interface AppContextInterface {
-  isAuth: boolean
-  setAuth: React.Dispatch<SetStateAction<boolean>>
+  profile: User | null
+  setProfile: React.Dispatch<SetStateAction<User | null>>
 }
 
 export const getInitialAppContext: () => AppContextInterface = () => ({
-  isAuth: false,
-  setAuth: () => null
+  profile: getProfileFromLS(),
+  setProfile: () => null
 })
 
 const initialAppContext = getInitialAppContext()
@@ -26,10 +28,9 @@ export default function AppProvider({
   children: React.ReactNode
   defaultValue?: AppContextInterface
 }) {
-  const [isAuth, setAuth] = useState<boolean>(defaultValue.isAuth)
-
+  const [profile, setProfile] = useState<User | null>(defaultValue.profile)
   return (
-    <AppContext.Provider value={{ isAuth, setAuth }}>
+    <AppContext.Provider value={{ profile, setProfile }}>
       {children}
     </AppContext.Provider>
   )

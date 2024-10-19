@@ -1,4 +1,3 @@
-import { listOrchids } from '@/shared/ListOfOrchids'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -9,13 +8,13 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Search, Star } from 'lucide-react'
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useGetOrchids } from '@/queries/useOrchid'
 
 export default function OrchidList() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [orchids, setOrchids] = useState(listOrchids)
+  const { data } = useGetOrchids()
+  const orchids = data?.data
   return (
     <motion.div
       className='w-full space-y-4'
@@ -69,7 +68,7 @@ export default function OrchidList() {
             className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'
             layout
           >
-            {orchids.map((orchid, index) => (
+            {orchids?.map((orchid, index) => (
               <motion.div
                 key={orchid.Id}
                 initial={{ opacity: 0, y: 20 }}

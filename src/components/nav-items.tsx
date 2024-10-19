@@ -1,3 +1,4 @@
+import { useAppContext } from '@/contexts/AppProvider'
 import { Link } from 'react-router-dom'
 
 const menuItems = [
@@ -15,12 +16,17 @@ const menuItems = [
   },
   {
     title: 'Login',
-    href: '/login'
+    href: '/login',
+    hideWhenLogin: true
   }
 ]
 
 export default function NavItems({ className }: { className?: string }) {
+  const { profile } = useAppContext()
   return menuItems.map((item) => {
+    if (item.hideWhenLogin && profile) {
+      return null
+    }
     return (
       <Link to={item.href} key={item.title} className={className}>
         {item.title}

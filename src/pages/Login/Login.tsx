@@ -14,11 +14,24 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '@/lib/firebase'
+import { User } from '@/schemaValidations/user.schema'
+import { setProfileToLS } from '@/lib/auth'
+import { useAppContext } from '@/contexts/AppProvider'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
+  const { setProfile } = useAppContext()
+  const navigate = useNavigate()
   const handleCLick = () => {
     signInWithPopup(auth, provider).then((data) => {
-      console.log(data)
+      const user: User = {
+        email: data.user.email,
+        name: data.user.displayName,
+        avatar: data.user.photoURL
+      }
+      setProfileToLS(user)
+      setProfile(user)
+      navigate('/')
     })
   }
 

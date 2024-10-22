@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CaretSortIcon, DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import {
   ColumnDef,
   useReactTable,
@@ -32,23 +32,40 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { useState, useEffect, useContext, createContext } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import AutoPagination from '@/components/auto-pagination'
-import { useGetOrchids } from '@/queries/useOrchid'
-import { GetListOrchidsResType } from '@/schemaValidations/orchid.schema'
+import { useDeleteOrchidMutation, useGetOrchids } from '@/queries/useOrchid'
+import {
+  GetListOrchidsResType,
+  OrchidsItem
+} from '@/schemaValidations/orchid.schema'
 import AddOrchid from '@/pages/Manage/AddOrchid'
+import { Badge } from '@/components/ui/badge'
+import { Star } from 'lucide-react'
+import EditOrchid from '@/pages/Manage/EditOrchid'
+import { toast } from '@/hooks/use-toast'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog'
 
 const OrchidTableContext = createContext<{
-  setOrchidEditId: (value: string) => void
-  orchidEditId: string | undefined
-  orchidDelete: GetListOrchidsResType[0] | null
-  setOrchidDelete: (value: GetListOrchidsResType[0] | null) => void
+  setOrchidEditName: (value: string) => void
+  orchidEditName: string | undefined
+  orchidDelete: OrchidsItem | null
+  setOrchidDelete: (value: OrchidsItem | null) => void
 }>({
-  setOrchidEditId: (value: string | undefined) => {},
-  orchidEditId: undefined,
+  setOrchidEditName: (value: string | undefined) => {},
+  orchidEditName: undefined,
   orchidDelete: null,
-  setOrchidDelete: (value: GetListOrchidsResType[0] | null) => {}
+  setOrchidDelete: (value: OrchidsItem | null) => {}
 })
 
-export const columns: ColumnDef<GetListOrchidsResType[0]>[] = [
+export const columns: ColumnDef<OrchidsItem>[] = [
   {
     accessorKey: 'Id',
     header: 'ID'
@@ -69,21 +86,68 @@ export const columns: ColumnDef<GetListOrchidsResType[0]>[] = [
     cell: ({ row }) => <div className='capitalize'>{row.getValue('name')}</div>
   },
   {
+    accessorKey: 'origin',
+    header: 'Origin',
+    cell: ({ row }) => (
+      <div className='capitalize'>{row.getValue('origin')}</div>
+    )
+  },
+  {
+    accessorKey: 'category',
+    header: 'Category',
+    cell: ({ row }) => (
+      <div className='capitalize'>{row.getValue('category')}</div>
+    )
+  },
+  {
+    accessorKey: 'rating',
+    header: 'Rating',
+    cell: ({ row }) => (
+      <div className='capitalize w-12 h-10 flex items-center'>
+        {row.getValue('rating')}{' '}
+        <Star className='ml-1 w-5 h-5 text-yellow-400 fill-current' />
+      </div>
+    )
+  },
+  {
+    accessorKey: 'description',
+    header: 'Description',
+    cell: ({ row }) => (
+      <div className='capitalize w-[350px]'>{row.getValue('description')}</div>
+    )
+  },
+
+  {
     accessorKey: 'isSpecial',
     header: 'Natural',
-    cell: ({ row }) => <div>{row.getValue('species')}</div>
+    cell: ({ row }) => (
+      <div>
+        {row.getValue('isSpecial') === true ? (
+          <Badge variant='secondary'>Natural</Badge>
+        ) : (
+          <Badge>Normal</Badge>
+        )}
+      </div>
+    )
   },
   {
     accessorKey: 'price',
     header: 'Price',
-    cell: ({ row }) => <div>{row.getValue('price')} VND</div>
+    cell: ({ row }) => <div>${row.getValue('price')}</div>
   },
   {
     id: 'actions',
     cell: ({ row }) => {
-      const { setOrchidEditId, setOrchidDelete } =
+      const { setOrchidEditName, setOrchidDelete } =
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useContext(OrchidTableContext)
+      const openEditDish = () => {
+        setOrchidEditName(row.original.name)
+      }
+
+      const openDeleteDish = () => {
+        setOrchidDelete(row.original)
+      }
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -93,12 +157,8 @@ export const columns: ColumnDef<GetListOrchidsResType[0]>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => setOrchidEditId(row.original.Id)}>
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setOrchidDelete(row.original)}>
-              Delete
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openEditDish}>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={openDeleteDish}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -106,13 +166,63 @@ export const columns: ColumnDef<GetListOrchidsResType[0]>[] = [
   }
 ]
 
+function AlertDialogDeleteOrchid({
+  orchidDelete,
+  setOrhidDelete
+}: {
+  orchidDelete: OrchidsItem | null
+  setOrhidDelete: (value: OrchidsItem | null) => void
+}) {
+  const { mutateAsync } = useDeleteOrchidMutation()
+  const deleteOrchid = async () => {
+    if (orchidDelete) {
+      try {
+        await mutateAsync(orchidDelete.Id)
+        setOrhidDelete(null)
+        toast({
+          description: 'Orchid deleted successfully'
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+  return (
+    <AlertDialog
+      open={Boolean(orchidDelete)}
+      onOpenChange={(value) => {
+        if (!value) {
+          setOrhidDelete(null)
+        }
+      }}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete orchid?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Orchid{' '}
+            <span className='bg-foreground text-primary-foreground rounded px-1'>
+              {orchidDelete?.name}
+            </span>{' '}
+            will be permanently deleted
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={deleteOrchid}>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
+
 const PAGE_SIZE = 10
 
 export default function OrchidTable() {
   const [searchParam] = useSearchParams()
   const page = searchParam.get('page') ? Number(searchParam.get('page')) : 1
   const pageIndex = page - 1
-  const [orchidEditId, setOrchidEditId] = useState<string | undefined>()
+  const [orchidEditName, setOrchidEditName] = useState<string | undefined>()
   const [orchidDelete, setOrchidDelete] = useState<
     GetListOrchidsResType[0] | null
   >(null)
@@ -158,9 +268,19 @@ export default function OrchidTable() {
 
   return (
     <OrchidTableContext.Provider
-      value={{ orchidEditId, setOrchidEditId, orchidDelete, setOrchidDelete }}
+      value={{
+        orchidEditName,
+        setOrchidEditName,
+        orchidDelete,
+        setOrchidDelete
+      }}
     >
       <div className='w-full'>
+        <EditOrchid name={orchidEditName} setName={setOrchidEditName} />
+        <AlertDialogDeleteOrchid
+          orchidDelete={orchidDelete}
+          setOrhidDelete={setOrchidDelete}
+        />
         <div className='flex items-center py-4'>
           <Input
             placeholder='Filter name...'
@@ -176,7 +296,7 @@ export default function OrchidTable() {
             <AddOrchid />
           </div>
         </div>
-        <div className='rounded-md border'>
+        <div className='rounded-md border overflow-x-auto'>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

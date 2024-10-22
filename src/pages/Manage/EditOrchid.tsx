@@ -4,31 +4,37 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { PlusCircle } from 'lucide-react'
-
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form'
-
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
 import {
-  CreateOrchidBody,
-  CreateOrchidBodyType
+  EditOrchidBody,
+  EditOrchidBodyType
 } from '@/schemaValidations/orchid.schema'
-import { useCreateOrchidMutation } from '@/queries/useOrchid'
+import { useEditOrchidMutation, useGetOrhidQuery } from '@/queries/useOrchid'
+import { useEffect } from 'react'
 import { toast } from '@/hooks/use-toast'
 
-export default function AddOrchid() {
-  const [open, setOpen] = useState(false)
-  const createOrchidMutation = useCreateOrchidMutation()
-  const form = useForm<CreateOrchidBodyType>({
-    resolver: zodResolver(CreateOrchidBody),
+export default function EditOrchid({
+  name,
+  setName
+}: {
+  name?: string | undefined
+  setName: (value: string | undefined) => void
+}) {
+  const { data } = useGetOrhidQuery({
+    name: name as string,
+    enabled: Boolean(name)
+  })
+  const editOrchidMutation = useEditOrchidMutation()
+  const form = useForm<EditOrchidBodyType>({
+    resolver: zodResolver(EditOrchidBody),
     defaultValues: {
+      Id: '',
       name: '',
       isSpecial: false,
       image: '',
@@ -40,50 +46,69 @@ export default function AddOrchid() {
       description: ''
     }
   })
+
+  useEffect(() => {
+    if (data) {
+      const {
+        name,
+        image,
+        price,
+        description,
+        category,
+        color,
+        origin,
+        rating,
+        isSpecial,
+        Id
+      } = data.data[0]
+      form.reset({
+        name,
+        isSpecial,
+        image,
+        color,
+        origin,
+        category,
+        rating,
+        price,
+        description,
+        Id
+      })
+    }
+  }, [data, form])
   const reset = () => {
-    form.reset()
+    setName(undefined)
   }
 
-  const onSubmit = async (body: CreateOrchidBodyType) => {
-    if (createOrchidMutation.isPending) return
+  const onSubmit = async (body: EditOrchidBodyType) => {
+    if (editOrchidMutation.isPending) return
     try {
-      const result = await createOrchidMutation.mutateAsync(body)
+      await editOrchidMutation.mutateAsync(body)
       toast({
-        description: `Orchid ${result.data.name} added successfully`
+        description: `Orchid updated successfully`
       })
       reset()
-      setOpen(false)
     } catch (error) {
       console.log(error)
     }
   }
   return (
     <Dialog
+      open={Boolean(name)}
       onOpenChange={(value) => {
         if (!value) {
           reset()
         }
-        setOpen(value)
       }}
-      open={open}
     >
-      <DialogTrigger asChild>
-        <Button size='sm' className='h-7 gap-1'>
-          <PlusCircle className='h-3.5 w-3.5' />
-          <span className='sr-only sm:not-sr-only sm:whitespace-nowrap'>
-            Add orchid
-          </span>
-        </Button>
-      </DialogTrigger>
       <DialogContent className='sm:max-w-[600px] max-h-screen overflow-auto'>
         <DialogHeader>
-          <DialogTitle>Add orchid</DialogTitle>
+          <DialogTitle>Update orchid</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
             noValidate
             className='grid auto-rows-max items-start gap-4 md:gap-8'
-            id='add-orchid-form'
+            id='edit-orchid-form'
             onSubmit={form.handleSubmit(onSubmit)}
             onReset={reset}
           >
@@ -224,8 +249,8 @@ export default function AddOrchid() {
           </form>
         </Form>
         <DialogFooter>
-          <Button type='submit' form='add-orchid-form'>
-            Add
+          <Button type='submit' form='edit-orchid-form'>
+            Save
           </Button>
         </DialogFooter>
       </DialogContent>

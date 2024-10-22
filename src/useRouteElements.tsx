@@ -2,6 +2,7 @@ import MainLayout from '@/layouts/MainLayout'
 import About from '@/pages/About'
 import Contact from '@/pages/Contact'
 import Login from '@/pages/Login'
+import Manage from '@/pages/Manage/Manage'
 import Natural from '@/pages/Natural'
 import OrchidDetail from '@/pages/OrchidDetail'
 import OrchidList from '@/pages/OrchidList'
@@ -55,6 +56,14 @@ export default function useRouteElements() {
       element: (
         <MainLayout>
           <Natural />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/manage',
+      element: (
+        <MainLayout>
+          <Manage />
         </MainLayout>
       )
     }
